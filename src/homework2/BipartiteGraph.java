@@ -3,7 +3,6 @@ package homework2;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -206,5 +205,13 @@ public class BipartiteGraph<L> {
 	 */
 	public L getParentByEdgeLabel(L child, L edgeLabel) {
 		return this.findNode(child).getParents().get(edgeLabel).getLabel();
+	}
+	
+	/**
+	 * @modifies this
+	 * @effects resets the graph to initial state.
+	 */
+	public void clear() {
+		this.nodes.clear();
 	}
 }
