@@ -14,7 +14,7 @@ public class BipartiteGraph<L> {
 	/**
 	 * @requires label != null.
 	 * @modifies this.
-	 * @effects adds label to the graph.
+	 * @effects adds label to the graph's nodes.
 	 * @return a boolean value representing if the label was added.
 	 */
 	public boolean addNode(L label, boolean isBlack) {
@@ -24,39 +24,52 @@ public class BipartiteGraph<L> {
 	/**
 	 * @requires label != null.
 	 * @modifies this.
-	 * @effects removes label from the graph.
+	 * @effects removes label from the graph's nodes.
 	 * @return a boolean value representing if the label was removed.
 	 */
 	public boolean removeNode(L label) {
 		// TODO
 	}
 	
-	public void addEdge(L from, L to, L label) {
+	/**
+	 * @requires (from, to, label) != null.
+	 * @modifies this.
+	 * @effects adds label to the graph's edges.
+	 * @return a boolean value representing if the label was added.
+	 */
+	public boolean addEdge(L from, L to, L label) {
 		// TODO
 	}
 	
 	/**
 	 * @requires label != null.
 	 * @modifies this.
-	 * @effects removes label from the graph.
+	 * @effects removes label from the graph's edges.
 	 * @return a boolean value representing if the label was removed.
 	 */
 	public boolean removeEdge(L label) {
 		// TODO
 	}
 	
-	public Collection<L> listBlackNodes() {
+	/**
+	 * @return a collection of the graph's black or white nodes.
+	 */
+	public Collection<L> listNodes(boolean isBlack) {
 		// TODO
 	}
 	
-	public Collection<L> listWhiteNodes() {
-		// TODO
-	}
-	
+	/**
+	 * @requires parent != null
+	 * @return a collection of the parent's children.
+	 */
 	public Collection<L> listChildren(L parent) {
 		// TODO
 	}
 	
+	/**
+	 * @requires child != null
+	 * @return a collection of the child's parents.
+	 */
 	public Collection<L> listParents(L child) {
 		// TODO
 	}
