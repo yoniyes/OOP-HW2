@@ -74,14 +74,25 @@ public class BipartiteGraph<L> {
 		// TODO
 	}
 	
+	/**
+	 * @requires (parent, edgeLabel) != null
+	 * @return the child node of the edge.
+	 */
 	public L getChildByEdgeLabel(L parent, L edgeLabel) {
 		// TODO
 	}
 	
+	/**
+	 * @requires (child, edgeLabel) != null
+	 * @return the parent node of the edge.
+	 */
 	public L getParentByEdgeLabel(L child, L edgeLabel) {
 		// TODO
 	}
 	
+	/**
+	 * @return the object in node 'label'. if not found, null is returned.
+	 */
 	public Object findNode(L label) {
 		// TODO
 	}
