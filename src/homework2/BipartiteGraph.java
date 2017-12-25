@@ -209,7 +209,9 @@ public class BipartiteGraph<L> {
 	 */
 	public boolean removeNode(L label) {
 		this.checkRep();
-		return this.nodes.remove(label) != null;
+		boolean res = (this.nodes.remove(label) != null);
+		this.checkRep();
+		return res;
 	}
 	
 	/**
