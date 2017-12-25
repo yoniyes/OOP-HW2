@@ -14,11 +14,24 @@ import java.util.Map;
  */
 public class BipartiteGraph<L> {
 	
-	//TODO rep. inv.
+	/**
+	 * Abstraction function:	The class represents a bipartite graph where every node contains it's
+	 * 							color inside of it. The nodes and their relations are stored in a field
+	 * 							that maps node labels to node objects.
+	 * 							Edges in the graph are defined by having a relation between two nodes 
+	 * 							such that:
+	 * 							Let A,B be nodes and let E be an edge in the graph.
+	 * 							If (A.children.get(E) == B && B.parents.get(E) == A), then E is a 
+	 * 							directed edge (A --E--> B).
+	 */
 	
-	//TODO abs. func.
+	/**
+	 * Rep. Invariant:	nodes != null
+	 */
 	
-	//TODO checkRep().
+	private void checkRep() {
+		assert(this.nodes != null);
+	}
 	
 	//TODO think about exceptions.
 	
@@ -157,12 +170,14 @@ public class BipartiteGraph<L> {
 	 */
 	public BipartiteGraph() {
 		this.nodes = new HashMap<>();
+		this.checkRep();
 	}
 	
 	/**
 	 * @return the object in node 'label'. if not found, null is returned.
 	 */
 	public Node<L> findNode(L label) {
+		this.checkRep();
 		return this.nodes.get(label);
 	}
 	
@@ -173,13 +188,16 @@ public class BipartiteGraph<L> {
 	 * @return a boolean value representing if the label was added.
 	 */
 	public boolean addNode(L label, Object data, boolean isBlack) {
+		this.checkRep();
 //		if (label == null) {
 //			throw new IllegalArgumentException();
 //		}
 		if (this.findNode(label) != null) {
+			this.checkRep();
 			return false;
 		}
 		this.nodes.put(label, new Node<L>(label, data, isBlack));
+		this.checkRep();
 		return true;
 	}
 	
@@ -190,6 +208,7 @@ public class BipartiteGraph<L> {
 	 * @return a boolean value representing if the label was removed.
 	 */
 	public boolean removeNode(L label) {
+		this.checkRep();
 		return this.nodes.remove(label) != null;
 	}
 	
@@ -200,13 +219,16 @@ public class BipartiteGraph<L> {
 	 * @return a boolean value representing if the label was added.
 	 */
 	public boolean addEdge(L from, L to, L label) {
+		this.checkRep();
 		Node<L> _from = this.findNode(from);
 		Node<L> _to = this.findNode(to);
 		if (!_from.getChildren().containsKey(label) && !_to.getParents().containsKey(label)) {
 			_from.addChild(label, _to);
 			_to.addParent(label, _from);
+			this.checkRep();
 			return true;
 		}
+		this.checkRep();
 		return false;
 	}
 	
@@ -217,21 +239,26 @@ public class BipartiteGraph<L> {
 	 * @return a boolean value representing if the label was removed.
 	 */
 	public boolean removeEdge(L label, L from) {
+		this.checkRep();
 		L to = this.findNode(from).getChildren().get(label).getLabel();
 		this.findNode(from).getChildren().remove(label);
-		return this.findNode(to).getParents().remove(label) != null;
+		boolean res = (this.findNode(to).getParents().remove(label) != null);
+		this.checkRep();
+		return res;
 	}
 	
 	/**
 	 * @return a collection of the graph's black or white nodes.
 	 */
 	public Collection<L> listNodes(boolean isBlack) {
+		this.checkRep();
 		List<L> list = new ArrayList<>();
 		for (Map.Entry<L, Node<L>> entry : nodes.entrySet()) {
 			if (entry.getValue().isBlack() == isBlack) {
 				list.add(entry.getKey());
 			}
 		}
+		this.checkRep();
 		return list;
 	}
 	
@@ -240,10 +267,12 @@ public class BipartiteGraph<L> {
 	 * @return a collection of the parent's children.
 	 */
 	public Collection<L> listChildren(L parent) {
+		this.checkRep();
 		List<L> list = new ArrayList<>();
 		for (Map.Entry<L, Node<L>> entry : this.findNode(parent).getChildren().entrySet()) {
 			list.add(entry.getValue().getLabel());
 		}
+		this.checkRep();
 		return list;
 	}
 	
@@ -252,10 +281,12 @@ public class BipartiteGraph<L> {
 	 * @return a collection of the child's parents.
 	 */
 	public Collection<L> listParents(L child) {
+		this.checkRep();
 		List<L> list = new ArrayList<>();
 		for (Map.Entry<L, Node<L>> entry : this.findNode(child).getParents().entrySet()) {
 			list.add(entry.getValue().getLabel());
 		}
+		this.checkRep();
 		return list;
 	}
 	
@@ -264,6 +295,7 @@ public class BipartiteGraph<L> {
 	 * @return the child node of the edge.
 	 */
 	public L getChildByEdgeLabel(L parent, L edgeLabel) {
+		this.checkRep();
 		return this.findNode(parent).getChildren().get(edgeLabel).getLabel();
 	}
 	
@@ -272,6 +304,7 @@ public class BipartiteGraph<L> {
 	 * @return the parent node of the edge.
 	 */
 	public L getParentByEdgeLabel(L child, L edgeLabel) {
+		this.checkRep();
 		return this.findNode(child).getParents().get(edgeLabel).getLabel();
 	}
 	
@@ -280,6 +313,8 @@ public class BipartiteGraph<L> {
 	 * @effects resets the graph to initial state.
 	 */
 	public void clear() {
+		this.checkRep();
 		this.nodes.clear();
+		this.checkRep();
 	}
 }
