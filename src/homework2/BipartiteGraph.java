@@ -22,14 +22,30 @@ public class BipartiteGraph<L> {
 	
 	//TODO think about exceptions.
 	
-	//TODO specs and doc for Node.
+	/**
+	 * A Node is an object containing data and identified by a label.
+	 * It can have incoming (parent) and outgoing (child) edges.
+	 * It can be classified as black or not-black.
+	 */
 	private class Node<K> {
 		
-		//TODO rep. inv.
+		/**
+		 * Abstraction function:	The class represents a node that is labeled by some object of type K
+		 * 							and contains data of type Object. It stores the child edges in the
+		 * 							field 'children', and they are identified by the edge label which is
+		 * 							also of type K. The same is done for parent edges. The color of the 
+		 * 							node is either black or not based on the boolean field 'isBlack'.
+		 */
 		
-		//TODO abs. func.
+		/**
+		 * Rep. Invariant:	(label, children, parents) != null
+		 */
 		
-		//TODO checkRep().
+		private void checkRep() {
+			assert(this.label != null);
+			assert(this.children != null);
+			assert(this.parents != null);
+		}
 
 		private Object data;
 		private K label;
@@ -37,48 +53,100 @@ public class BipartiteGraph<L> {
 		private Map<K, Node<K>> parents;
 		private boolean isBlack;
 		
+		/**
+		 * @requires label != null
+		 * @return a new instance of this with the (label, data, isBlack).
+		 */
 		public Node(K label, Object data, boolean isBlack) {
 			this.data = data;
 			this.label = label;
 			this.children = new HashMap<>();
 			this.parents = new HashMap<>();
 			this.isBlack = isBlack;
+			this.checkRep();
 		}
 		
+		/**
+		 * @return true if the node is black, false otherwise.
+		 */
 		public boolean isBlack() {
+			this.checkRep();
 			return this.isBlack;
 		}
 		
+		/**
+		 * @return the data object of this.
+		 */
 		public Object getData() {
+			this.checkRep();
 			return this.data;
 		}
 		
+		/**
+		 * @modifies this.
+		 * @effects the data in this is set to 'data'.
+		 */
 		public void setData(Object data) {
+			this.checkRep();
 			this.data = data;
+			this.checkRep();
 		}
 		
+		/**
+		 * @return the label object of this.
+		 */
 		public K getLabel() {
+			this.checkRep();
 			return this.label;
 		}
 		
+		/**
+		 * @requires label != null.
+		 * @modifies this.
+		 * @effects the label of this is set to 'label'.
+		 */
 		public void setLabel(K label) {
+			this.checkRep();
 			this.label = label;
+			this.checkRep();
 		}
 		
+		/**
+		 * @return a map of children nodes in the form of  (edgeLabel --> childNode).
+		 */
 		public Map<K, Node<K>> getChildren() {
+			this.checkRep();
 			return this.children;
 		}
 		
-		public void addChild(K label, Node<K> child) {
-			this.children.put(label, child);
+		/**
+		 * @requires (edgeLabel, child) != null.
+		 * @modifies this.
+		 * @effects an edge is drawn from this to child.
+		 */
+		public void addChild(K edgeLabel, Node<K> child) {
+			this.checkRep();
+			this.children.put(edgeLabel, child);
+			this.checkRep();
 		}
 		
+		/**
+		 * @return a map of parent nodes in the form of  (edgeLabel --> parentNode).
+		 */
 		public Map<K, Node<K>> getParents() {
+			this.checkRep();
 			return this.parents;
 		}
 		
-		public void addParent(K label, Node<K> parent) {
-			this.parents.put(label, parent);
+		/**
+		 * @requires (edgeLabel, child) != null.
+		 * @modifies this.
+		 * @effects an edge is drawn from parent to this.
+		 */
+		public void addParent(K edgeLabel, Node<K> parent) {
+			this.checkRep();
+			this.parents.put(edgeLabel, parent);
+			this.checkRep();
 		}
 	}
 	
