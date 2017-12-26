@@ -40,7 +40,7 @@ public class BipartiteGraph<L> {
 	 * It can have incoming (parent) and outgoing (child) edges.
 	 * It can be classified as black or not-black.
 	 */
-	private class Node<K> {
+	public class Node<K> {
 		
 		/**
 		 * Abstraction function:	The class represents a node that is labeled by some object of type K
@@ -308,6 +308,14 @@ public class BipartiteGraph<L> {
 	public L getParentByEdgeLabel(L child, L edgeLabel) {
 		this.checkRep();
 		return this.findNode(child).getParents().get(edgeLabel).getLabel();
+	}
+	
+	/**
+	 * @return the data in the node with the given label. if doesn't exist, null is returned.
+	 */
+	public Object getNodeData(L label) {
+		this.checkRep();
+		return (this.findNode(label) != null ? this.findNode(label).getData() : null);
 	}
 	
 	/**
