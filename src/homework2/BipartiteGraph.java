@@ -339,7 +339,7 @@ public class BipartiteGraph<L> {
 	 */
 	public UnmodifiableArrayList<L> listChildren(L parent) {
 		this.checkRep();
-		List<L> list = null;
+		List<L> list = new ArrayList<>();
 		if (this.findNode(parent) != null) {
 			list = this.findNode(parent).getChildrenLabels();
 		}
@@ -351,7 +351,7 @@ public class BipartiteGraph<L> {
 	 */
 	public UnmodifiableArrayList<L> listParents(L child) {
 		this.checkRep();
-		List<L> list = null;
+		List<L> list = new ArrayList<>();
 		if (this.findNode(child) != null) {
 			list = this.findNode(child).getParentsLabels();
 		}
