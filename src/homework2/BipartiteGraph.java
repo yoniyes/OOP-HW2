@@ -325,18 +325,18 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @return an immutable collection of the graph's black or white nodes.
+	 * @return an immutable collection of the graph's black or white nodes labels.
 	 */
-	public UnmodifiableArrayList<Object> listNodes(boolean isBlack) {
+	public UnmodifiableArrayList<L> listNodes(boolean isBlack) {
 		this.checkRep();
 		List<Object> list = new ArrayList<>();
 		for (Map.Entry<L, Node<L>> entry : nodes.entrySet()) {
 			if (entry.getValue().isBlack() == isBlack) {
-				list.add(entry.getValue());
+				list.add(entry.getKey());
 			}
 		}
 		this.checkRep();
-		return new UnmodifiableArrayList<Object>(list.toArray(), list.size());
+		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
 	}
 	
 	/**
