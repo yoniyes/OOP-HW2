@@ -1,13 +1,11 @@
 package homework2;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.sun.javafx.UnmodifiableArrayList;
-import com.sun.javafx.collections.ImmutableObservableList;
 
 
 /**
@@ -37,10 +35,10 @@ public class BipartiteGraph<L> {
 	private void checkRep() {
 		assert(this.nodes != null);
 		for(Node<L> node : nodes.values()) {
-			for(Node<L> otherEnd : node.getChildren().values()) {
+			for(Node<L> otherEnd : node.getChildrenEdges().values()) {
 				assert(node.isBlack() != otherEnd.isBlack());
 			}
-			for(Node<L> otherEnd : node.getParents().values()) {
+			for(Node<L> otherEnd : node.getParentsEdges().values()) {
 				assert(node.isBlack() != otherEnd.isBlack());
 			}
 		}
@@ -64,7 +62,7 @@ public class BipartiteGraph<L> {
 		 */
 		
 		/**
-		 * Rep. Invariant:	(label, children, parents) != null
+		 * Rep. Invariant:	(label, children, parents, childrenLabels, parentLabels) != null
 		 */
 		
 		private void checkRep() {
@@ -77,6 +75,8 @@ public class BipartiteGraph<L> {
 		private K label;
 		private Map<K, Node<K>> children;
 		private Map<K, Node<K>> parents;
+		private List<K> childrenLabels;
+		private List<K> parentLabels;
 		private boolean isBlack;
 		
 		/**
@@ -88,6 +88,8 @@ public class BipartiteGraph<L> {
 			this.label = label;
 			this.children = new HashMap<>();
 			this.parents = new HashMap<>();
+			this.childrenLabels = new ArrayList<>();
+			this.parentLabels = new ArrayList<>();
 			this.isBlack = isBlack;
 			this.checkRep();
 		}
@@ -140,9 +142,17 @@ public class BipartiteGraph<L> {
 		/**
 		 * @return a map of children nodes in the form of  (edgeLabel --> childNode).
 		 */
-		public Map<K, Node<K>> getChildren() {
+		public Map<K, Node<K>> getChildrenEdges() {
 			this.checkRep();
 			return this.children;
+		}
+		
+		/**
+		 * @return a map of children nodes in the form of  (edgeLabel --> childNode).
+		 */
+		public List<K> getChildrenLabels() {
+			this.checkRep();
+			return this.childrenLabels;
 		}
 		
 		/**
@@ -153,15 +163,26 @@ public class BipartiteGraph<L> {
 		public void addChild(K edgeLabel, Node<K> child) {
 			this.checkRep();
 			this.children.put(edgeLabel, child);
+			if (!this.childrenLabels.contains(child.getLabel())) {
+				this.childrenLabels.add(child.getLabel());
+			}
 			this.checkRep();
 		}
 		
 		/**
 		 * @return a map of parent nodes in the form of  (edgeLabel --> parentNode).
 		 */
-		public Map<K, Node<K>> getParents() {
+		public Map<K, Node<K>> getParentsEdges() {
 			this.checkRep();
 			return this.parents;
+		}
+		
+		/**
+		 * @return a map of parent nodes in the form of  (edgeLabel --> parentNode).
+		 */
+		public List<K> getParentsLabels() {
+			this.checkRep();
+			return this.parentLabels;
 		}
 		
 		/**
@@ -172,7 +193,36 @@ public class BipartiteGraph<L> {
 		public void addParent(K edgeLabel, Node<K> parent) {
 			this.checkRep();
 			this.parents.put(edgeLabel, parent);
+			if (!this.parentLabels.contains(parent.getLabel())) {
+				this.parentLabels.add(parent.getLabel());
+			}
 			this.checkRep();
+		}
+		
+		/**
+		 * @modifies this.edges.
+		 * @effects removes the node child relation from this.
+		 */
+		public void removeChild(K label) {
+			this.getChildrenLabels().remove(label);
+			for (Map.Entry<K, Node<K>> childEdge : this.getChildrenEdges().entrySet()) {
+				if (childEdge.getValue().getLabel().equals(label)) {
+					this.getChildrenEdges().remove(childEdge);
+				}
+			}
+		}
+		
+		/**
+		 * @modifies this.edges.
+		 * @effects removes the node parent relation from this.
+		 */
+		public void removeParent(K label) {
+			this.getParentsLabels().remove(label);
+			for (Map.Entry<K, Node<K>> parentEdge : this.getParentsEdges().entrySet()) {
+				if (parentEdge.getValue().getLabel().equals(label)) {
+					this.getParentsEdges().remove(parentEdge);
+				}
+			}
 		}
 	}
 	
@@ -223,6 +273,10 @@ public class BipartiteGraph<L> {
 	public boolean removeNode(L label) {
 		this.checkRep();
 		boolean res = (this.nodes.remove(label) != null);
+		for (Node<L> node : this.nodes.values()) {
+			node.removeParent(label);
+			node.removeChild(label);
+		}
 		this.checkRep();
 		return res;
 	}
@@ -237,7 +291,8 @@ public class BipartiteGraph<L> {
 		this.checkRep();
 		Node<L> _from = this.findNode(from);
 		Node<L> _to = this.findNode(to);
-		if (!_from.getChildren().containsKey(label) && !_to.getParents().containsKey(label)) {
+		if (!_from.getChildrenEdges().containsKey(label) && !_to.getParentsEdges().containsKey(label) &&
+				_from.isBlack() != _to.isBlack()) {
 			_from.addChild(label, _to);
 			_to.addParent(label, _from);
 			this.checkRep();
@@ -253,58 +308,53 @@ public class BipartiteGraph<L> {
 	 * @effects removes label from the graph's edges.
 	 * @return a boolean value representing if the label was removed.
 	 */
-	public boolean removeEdge(L label, L from) {
+	public void removeEdge(L label, L from) {
 		this.checkRep();
-		L to = this.findNode(from).getChildren().get(label).getLabel();
-		this.findNode(from).getChildren().remove(label);
-		boolean res = (this.findNode(to).getParents().remove(label) != null);
+		L to = this.findNode(from).getChildrenEdges().get(label).getLabel();
+//		this.findNode(from).getChildrenEdges().remove(label);
+//		boolean res = (this.findNode(to).getParentsEdges().remove(label) != null);
+		
+		Node<L> _from = this.findNode(from);
+		Node<L> _to = this.findNode(to);
+		_from.removeChild(to);
+		_to.removeParent(from);
 		this.checkRep();
-		return res;
+//		return res;
 	}
 	
 	/**
-	 * @return a collection of the graph's black or white nodes.
+	 * @return an immutable collection of the graph's black or white nodes.
 	 */
-	public Collection<L> listNodes(boolean isBlack) {
+	public UnmodifiableArrayList<Object> listNodes(boolean isBlack) {
 		this.checkRep();
-		List<L> list = new ArrayList<>();
+		List<Object> list = new ArrayList<>();
 		for (Map.Entry<L, Node<L>> entry : nodes.entrySet()) {
 			if (entry.getValue().isBlack() == isBlack) {
-				list.add(entry.getKey());
+				list.add(entry.getValue());
 			}
 		}
 		this.checkRep();
-		return list;
+		return new UnmodifiableArrayList<Object>(list.toArray(), list.size());
 	}
 	
 	/**
 	 * @requires parent != null
-	 * @return a collection of the parent's children.
+	 * @return an immutable collection of the parent's children.
 	 */
-	public Collection<L> listChildren(L parent) {
+	public UnmodifiableArrayList<Object> listChildren(L parent) {
 		this.checkRep();
-		List<L> list = new ArrayList<>();
-		for (Map.Entry<L, Node<L>> entry : this.findNode(parent).getChildren().entrySet()) {
-			list.add(entry.getValue().getLabel());
-		}
-		this.checkRep();
-		//FIXME will that work in O(1)?
-//		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
-		return list;
+		List<L> list = this.findNode(parent).getChildrenLabels();
+		return new UnmodifiableArrayList<Object>(list.toArray(), list.size());
 	}
 	
 	/**
 	 * @requires child != null
 	 * @return a collection of the child's parents.
 	 */
-	public Collection<L> listParents(L child) {
+	public UnmodifiableArrayList<Object> listParents(L child) {
 		this.checkRep();
-		List<L> list = new ArrayList<>();
-		for (Map.Entry<L, Node<L>> entry : this.findNode(child).getParents().entrySet()) {
-			list.add(entry.getValue().getLabel());
-		}
-		this.checkRep();
-		return list;
+		List<L> list = this.findNode(child).getChildrenLabels();
+		return new UnmodifiableArrayList<Object>(list.toArray(), list.size());
 	}
 	
 	/**
@@ -313,7 +363,7 @@ public class BipartiteGraph<L> {
 	 */
 	public L getChildByEdgeLabel(L parent, L edgeLabel) {
 		this.checkRep();
-		return this.findNode(parent).getChildren().get(edgeLabel).getLabel();
+		return this.findNode(parent).getChildrenEdges().get(edgeLabel).getLabel();
 	}
 	
 	/**
@@ -322,7 +372,7 @@ public class BipartiteGraph<L> {
 	 */
 	public L getParentByEdgeLabel(L child, L edgeLabel) {
 		this.checkRep();
-		return this.findNode(child).getParents().get(edgeLabel).getLabel();
+		return this.findNode(child).getParentsEdges().get(edgeLabel).getLabel();
 	}
 	
 	/**
