@@ -304,11 +304,18 @@ public class BipartiteGraph<L> {
 	 */
 	public void removeEdge(L label, L from) {
 		this.checkRep();
-		L to = this.findNode(from).getChildrenEdges().get(label).getLabel();	
 		Node<L> _from = this.findNode(from);
+		L to = null;
+		if (_from != null) {
+			if (_from.getChildrenEdges().get(label) != null){
+				_from.getChildrenEdges().get(label).getLabel();	
+			}
+			_from.removeChild(to);
+		}
 		Node<L> _to = this.findNode(to);
-		_from.removeChild(to);
-		_to.removeParent(from);
+		if (_to != null) {
+			_to.removeParent(from);
+		}
 		this.checkRep();
 	}
 	
@@ -332,7 +339,10 @@ public class BipartiteGraph<L> {
 	 */
 	public UnmodifiableArrayList<L> listChildren(L parent) {
 		this.checkRep();
-		List<L> list = this.findNode(parent).getChildrenLabels();
+		List<L> list = null;
+		if (this.findNode(parent) != null) {
+			list = this.findNode(parent).getChildrenLabels();
+		}
 		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
 	}
 	
@@ -341,7 +351,10 @@ public class BipartiteGraph<L> {
 	 */
 	public UnmodifiableArrayList<L> listParents(L child) {
 		this.checkRep();
-		List<L> list = this.findNode(child).getParentsLabels();
+		List<L> list = null;
+		if (this.findNode(child) != null) {
+			list = this.findNode(child).getParentsLabels();
+		}
 		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
 	}
 	
@@ -350,7 +363,8 @@ public class BipartiteGraph<L> {
 	 */
 	public L getChildByEdgeLabel(L parent, L edgeLabel) {
 		this.checkRep();
-		return this.findNode(parent).getChildrenEdges().get(edgeLabel).getLabel();
+		return (this.findNode(parent) != null ? 
+				this.findNode(parent).getChildrenEdges().get(edgeLabel).getLabel() : null);
 	}
 	
 	/**
@@ -358,7 +372,8 @@ public class BipartiteGraph<L> {
 	 */
 	public L getParentByEdgeLabel(L child, L edgeLabel) {
 		this.checkRep();
-		return this.findNode(child).getParentsEdges().get(edgeLabel).getLabel();
+		return (this.findNode(child) != null ? 
+				this.findNode(child).getParentsEdges().get(edgeLabel).getLabel() : null);
 	}
 	
 	/**
@@ -366,7 +381,8 @@ public class BipartiteGraph<L> {
 	 */
 	public Object getNodeData(L label) {
 		this.checkRep();
-		return (this.findNode(label) != null ? this.findNode(label).getData() : null);
+		return (this.findNode(label) != null ? 
+				this.findNode(label).getData() : null);
 	}
 	
 	/**
