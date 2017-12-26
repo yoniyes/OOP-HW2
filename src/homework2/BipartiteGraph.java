@@ -69,6 +69,8 @@ public class BipartiteGraph<L> {
 			assert(this.label != null);
 			assert(this.children != null);
 			assert(this.parents != null);
+			assert(this.childrenLabels != null);
+			assert(this.parentLabels != null);
 		}
 
 		private Object data;
