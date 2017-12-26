@@ -26,6 +26,8 @@ public class BipartiteGraph<L> {
 	 * 							directed edge (A --E--> B).
 	 */
 	
+	//TODO rep. inv.: the thing with the edge labels... check that there's no overlapping.
+	
 	/**
 	 * Rep. Invariant:	nodes != null
 	 * 					for all edges touching node V:
@@ -44,8 +46,6 @@ public class BipartiteGraph<L> {
 		}
 	}
 	
-	//TODO think about exceptions.
-	
 	/**
 	 * A Node is an object containing data and identified by a label.
 	 * It can have incoming (parent) and outgoing (child) edges.
@@ -62,11 +62,10 @@ public class BipartiteGraph<L> {
 		 */
 		
 		/**
-		 * Rep. Invariant:	(label, children, parents, childrenLabels, parentLabels) != null
+		 * Rep. Invariant:	(children, parents, childrenLabels, parentLabels) != null
 		 */
 		
 		private void checkRep() {
-			assert(this.label != null);
 			assert(this.children != null);
 			assert(this.parents != null);
 			assert(this.childrenLabels != null);
@@ -82,7 +81,6 @@ public class BipartiteGraph<L> {
 		private boolean isBlack;
 		
 		/**
-		 * @requires label != null
 		 * @return a new instance of this with the (label, data, isBlack).
 		 */
 		public Node(K label, Object data, boolean isBlack) {
@@ -131,7 +129,6 @@ public class BipartiteGraph<L> {
 		}
 		
 		/**
-		 * @requires label != null.
 		 * @modifies this.
 		 * @effects the label of this is set to 'label'.
 		 */
@@ -158,7 +155,7 @@ public class BipartiteGraph<L> {
 		}
 		
 		/**
-		 * @requires (edgeLabel, child) != null.
+		 * @requires (child) != null.
 		 * @modifies this.
 		 * @effects an edge is drawn from this to child.
 		 */
@@ -247,16 +244,13 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @requires (label, data) != null.
+	 * @requires data != null.
 	 * @modifies this.
 	 * @effects adds label to the graph's nodes.
 	 * @return a boolean value representing if the label was added.
 	 */
 	public boolean addNode(L label, Object data, boolean isBlack) {
 		this.checkRep();
-//		if (label == null) {
-//			throw new IllegalArgumentException();
-//		}
 		if (this.findNode(label) != null) {
 			this.checkRep();
 			return false;
@@ -267,7 +261,6 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @requires label != null.
 	 * @modifies this.
 	 * @effects removes label from the graph's nodes.
 	 * @return a boolean value representing if the label was removed.
@@ -284,7 +277,6 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @requires (from, to, label) != null.
 	 * @modifies this.
 	 * @effects adds label to the graph's edges.
 	 * @return a boolean value representing if the label was added.
@@ -306,23 +298,18 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @requires label != null.
 	 * @modifies this.
 	 * @effects removes label from the graph's edges.
 	 * @return a boolean value representing if the label was removed.
 	 */
 	public void removeEdge(L label, L from) {
 		this.checkRep();
-		L to = this.findNode(from).getChildrenEdges().get(label).getLabel();
-//		this.findNode(from).getChildrenEdges().remove(label);
-//		boolean res = (this.findNode(to).getParentsEdges().remove(label) != null);
-		
+		L to = this.findNode(from).getChildrenEdges().get(label).getLabel();	
 		Node<L> _from = this.findNode(from);
 		Node<L> _to = this.findNode(to);
 		_from.removeChild(to);
 		_to.removeParent(from);
 		this.checkRep();
-//		return res;
 	}
 	
 	/**
@@ -341,7 +328,6 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @requires parent != null
 	 * @return an immutable collection of the parent's children.
 	 */
 	public UnmodifiableArrayList<L> listChildren(L parent) {
@@ -351,7 +337,6 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @requires child != null
 	 * @return a collection of the child's parents.
 	 */
 	public UnmodifiableArrayList<L> listParents(L child) {
@@ -361,7 +346,6 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @requires (parent, edgeLabel) != null
 	 * @return the child node of the edge.
 	 */
 	public L getChildByEdgeLabel(L parent, L edgeLabel) {
@@ -370,7 +354,6 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @requires (child, edgeLabel) != null
 	 * @return the parent node of the edge.
 	 */
 	public L getParentByEdgeLabel(L child, L edgeLabel) {
