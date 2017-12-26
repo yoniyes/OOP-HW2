@@ -300,7 +300,6 @@ public class BipartiteGraph<L> {
 	/**
 	 * @modifies this.
 	 * @effects removes label from the graph's edges.
-	 * @return a boolean value representing if the label was removed.
 	 */
 	public void removeEdge(L label, L from) {
 		this.checkRep();
