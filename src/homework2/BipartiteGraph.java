@@ -343,20 +343,20 @@ public class BipartiteGraph<L> {
 	 * @requires parent != null
 	 * @return an immutable collection of the parent's children.
 	 */
-	public UnmodifiableArrayList<Object> listChildren(L parent) {
+	public UnmodifiableArrayList<L> listChildren(L parent) {
 		this.checkRep();
 		List<L> list = this.findNode(parent).getChildrenLabels();
-		return new UnmodifiableArrayList<Object>(list.toArray(), list.size());
+		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
 	}
 	
 	/**
 	 * @requires child != null
 	 * @return a collection of the child's parents.
 	 */
-	public UnmodifiableArrayList<Object> listParents(L child) {
+	public UnmodifiableArrayList<L> listParents(L child) {
 		this.checkRep();
 		List<L> list = this.findNode(child).getChildrenLabels();
-		return new UnmodifiableArrayList<Object>(list.toArray(), list.size());
+		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
 	}
 	
 	/**
