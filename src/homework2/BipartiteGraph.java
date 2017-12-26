@@ -27,10 +27,20 @@ public class BipartiteGraph<L> {
 	
 	/**
 	 * Rep. Invariant:	nodes != null
+	 * 					for all edges touching node V:
+	 * 						V.color != otherEndOfEdges.color
 	 */
 	
 	private void checkRep() {
 		assert(this.nodes != null);
+		for(Node<L> node : nodes.values()) {
+			for(Node<L> otherEnd : node.getChildren().values()) {
+				assert(node.isBlack() != otherEnd.isBlack());
+			}
+			for(Node<L> otherEnd : node.getParents().values()) {
+				assert(node.isBlack() != otherEnd.isBlack());
+			}
+		}
 	}
 	
 	//TODO think about exceptions.
