@@ -307,7 +307,7 @@ public class BipartiteGraph<L> {
 		L to = null;
 		if (_from != null) {
 			if (_from.getChildrenEdges().get(label) != null){
-				to = _from.getChildrenEdges().get(label).getLabel();	
+				to = _from.getChildrenEdges().get(label).getLabel();
 			}
 			_from.removeChild(to);
 		}
