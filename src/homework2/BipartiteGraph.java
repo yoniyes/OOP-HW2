@@ -293,6 +293,7 @@ public class BipartiteGraph<L> {
 		this.checkRep();
 		Node<L> _from = this.findNode(from);
 		Node<L> _to = this.findNode(to);
+		if(_to == null || _from == null) return false;
 		if (!_from.getChildrenEdges().containsKey(label) && !_to.getParentsEdges().containsKey(label) &&
 				_from.isBlack() != _to.isBlack()) {
 			_from.addChild(label, _to);
@@ -355,7 +356,7 @@ public class BipartiteGraph<L> {
 	 */
 	public UnmodifiableArrayList<L> listParents(L child) {
 		this.checkRep();
-		List<L> list = this.findNode(child).getChildrenLabels();
+		List<L> list = this.findNode(child).getParentsLabels();
 		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
 	}
 	
