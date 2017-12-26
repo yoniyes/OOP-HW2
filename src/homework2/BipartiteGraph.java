@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sun.javafx.UnmodifiableArrayList;
+import com.sun.javafx.collections.ImmutableObservableList;
+
 
 /**
  * A bipartite graph is a graph with a group of white nodes and a group of black nodes,
@@ -285,6 +288,8 @@ public class BipartiteGraph<L> {
 			list.add(entry.getValue().getLabel());
 		}
 		this.checkRep();
+		//FIXME will that work in O(1)?
+//		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
 		return list;
 	}
 	
