@@ -33,7 +33,190 @@ public class BipartiteGraphTest {
     }
     
     
-    //  TODO: Add black-box tests
+    @Test
+    public void generalTest() {
+    	BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
+    	
+    	//create a graph
+    	driver.createGraph("g1");
+    	
+    	//add some legal nodes
+    	driver.addBlackNode("g1", "bn1");
+    	driver.addWhiteNode("g1", "wn1");
+    	driver.addBlackNode("g1", "bn2");
+    	driver.addWhiteNode("g1", "wn2");
+    	driver.addBlackNode("g1", "bn3");
+    	driver.addWhiteNode("g1", "wn3");
+    	driver.addBlackNode("g1", "bn4");
+    	driver.addWhiteNode("g1", "wn4");
+    	
+    	//add some legal edges
+    	driver.addEdge("g1","bn1","wn1","b1 to w1");
+    	driver.addEdge("g1","bn1","wn2","b1 to w2");
+    	driver.addEdge("g1","wn3","bn2","w3 to b2");
+    	driver.addEdge("g1","bn4","wn4","b4 to w4");
+    	driver.addEdge("g1","wn4","bn3","w4 to b3");
+    	driver.addEdge("g1","bn3","wn3","b3 to w3");
+    	    	
+    	assertEquals("Wrong black nodes", "bn1 bn2 bn3 bn4", driver.listBlackNodes("g1"));
+    	assertEquals("Wrong white nodes", "wn1 wn2 wn3 wn4", driver.listWhiteNodes("g1"));
+    	
+    	assertEquals("Wrong children of bn1", "wn1 wn2", driver.listChildren("g1", "bn1"));
+    	assertEquals("Wrong children of bn2", "", driver.listChildren("g1", "bn2"));
+    	assertEquals("Wrong children of bn3", "wn3", driver.listChildren("g1", "bn3"));
+    	assertEquals("Wrong children of bn4", "wn4", driver.listChildren("g1", "bn4"));
+    	
+    	
+    	assertEquals("Wrong children of wn1", "", driver.listChildren("g1", "wn1"));
+    	assertEquals("Wrong children of wn2", "", driver.listChildren("g1", "wn2"));
+    	assertEquals("Wrong children of wn3", "bn2", driver.listChildren("g1", "wn3"));
+    	assertEquals("Wrong children of wn4", "bn3", driver.listChildren("g1", "wn4"));
+    	
+    	assertEquals("Wrong parents of bn1","" , driver.listParents("g1", "bn1"));
+    	assertEquals("Wrong parents of bn2","wn3" , driver.listParents("g1", "bn2"));
+    	assertEquals("Wrong parents of bn3","wn4" , driver.listParents("g1", "bn3"));
+    	assertEquals("Wrong parents of bn4", "", driver.listParents("g1", "bn4"));
+    	
+    	assertEquals("Wrong parents of wn1", "bn1", driver.listParents("g1", "wn1"));
+    	assertEquals("Wrong parents of wn2", "bn1", driver.listParents("g1", "wn2"));
+    	assertEquals("Wrong parents of wn3", "bn3", driver.listParents("g1", "wn3"));
+    	assertEquals("Wrong parents of wn4", "bn4", driver.listParents("g1", "wn4"));
+
+    	assertEquals("Wrong child of bn1", "wn1", driver.getChildByEdgeLabel("g1", "bn1", "b1 to w1"));
+    	assertEquals("Wrong parent of bn3", "wn4", driver.getParentByEdgeLabel("g1", "bn3", "w4 to b3"));
+    }
     
+  @Test
+  public void nodesAdditionTest() {
+	  BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
+  	
+  	//create a graph
+  	driver.createGraph("g1");
+  	
+  	//add 10 nodes, twice. second time shouldn't add them
+  	for(int j = 0 ; j < 2 ; j++){
+		for(int i = 4 ; i >= 0 ; i--) {
+			driver.addWhiteNode("g1", "wn" + i);
+			driver.addBlackNode("g1", "bn" + i);
+		}
+  	}
+  	
+  	assertEquals("Wrong black nodes", "bn0 bn1 bn2 bn3 bn4", driver.listBlackNodes("g1"));
+  	assertEquals("Wrong white nodes", "wn0 wn1 wn2 wn3 wn4", driver.listWhiteNodes("g1"));
+  }
   
+  @Test
+  public void edgesAdditionTest() {
+	BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
+	  	
+  	//create a graph
+  	driver.createGraph("g1");
+  	
+  //add some legal nodes
+	driver.addBlackNode("g1", "bn1");
+	driver.addWhiteNode("g1", "wn1");
+	driver.addBlackNode("g1", "bn2");
+	driver.addWhiteNode("g1", "wn2");
+	driver.addBlackNode("g1", "bn3");
+	driver.addWhiteNode("g1", "wn3");
+	driver.addBlackNode("g1", "bn4");
+	driver.addWhiteNode("g1", "wn4");
+	
+	//add some legal edges
+	driver.addEdge("g1","bn1","wn1","b1 to w1");
+	driver.addEdge("g1","bn1","wn2","b1 to w2");
+	driver.addEdge("g1","wn3","bn2","w3 to b2");
+	driver.addEdge("g1","bn4","wn4","b4 to w4");
+	driver.addEdge("g1","wn4","bn3","w4 to b3");
+	driver.addEdge("g1","bn3","wn3","b3 to w3");
+	
+	//add edges with existing labels but different nodes
+	driver.addEdge("g1","bn4","wn1","w3 to b2");
+	
+	//add illegal edges (same color nodes)
+	driver.addEdge("g1","bn1","bn2","b1 to b2");
+	driver.addEdge("g1","bn2","bn3","b2 to b3");
+	driver.addEdge("g1","bn4","bn3","b4 to b3");
+	driver.addEdge("g1","wn4","wn1","w4 to w1");
+	driver.addEdge("g1","wn1","wn2","w1 to w2");
+	driver.addEdge("g1","wn3","wn2","w3 to w2");
+	
+	//add illegal edges (same nodes)
+	driver.addEdge("g1", "bn1", "bn1", "b1 to b1");
+	driver.addEdge("g1", "wn1", "wn1", "w1 to w1");
+	
+	//add illegal edges (non-existing nodes)
+	driver.addEdge("g1", "wn1", "BBB", "w1 to BBB");
+	driver.addEdge("g1", "AAA", "bn1", "AAA to bn1");
+	driver.addEdge("g1", "AAA", "BBB", "AAA to BBB");
+	
+	//add illegal edges (existing edges)
+	driver.addEdge("g1","bn1","wn1","b1 to w1");
+	driver.addEdge("g1","bn1","wn2","b1 to w2");
+	driver.addEdge("g1","wn3","bn2","w3 to b2");
+	
+	//check that only legal edges were added
+	assertEquals("Wrong black nodes", "bn1 bn2 bn3 bn4", driver.listBlackNodes("g1"));
+	assertEquals("Wrong white nodes", "wn1 wn2 wn3 wn4", driver.listWhiteNodes("g1"));
+	
+	assertEquals("Wrong children of bn1", "wn1 wn2", driver.listChildren("g1", "bn1"));
+	assertEquals("Wrong children of bn2", "", driver.listChildren("g1", "bn2"));
+	assertEquals("Wrong children of bn3", "wn3", driver.listChildren("g1", "bn3"));
+	assertEquals("Wrong children of bn4", "wn1 wn4", driver.listChildren("g1", "bn4"));
+	
+	
+	assertEquals("Wrong children of wn1", "", driver.listChildren("g1", "wn1"));
+	assertEquals("Wrong children of wn2", "", driver.listChildren("g1", "wn2"));
+	assertEquals("Wrong children of wn3", "bn2", driver.listChildren("g1", "wn3"));
+	assertEquals("Wrong children of wn4", "bn3", driver.listChildren("g1", "wn4"));
+	
+	assertEquals("Wrong parents of bn1","" , driver.listParents("g1", "bn1"));
+	assertEquals("Wrong parents of bn2","wn3" , driver.listParents("g1", "bn2"));
+	assertEquals("Wrong parents of bn3","wn4" , driver.listParents("g1", "bn3"));
+	assertEquals("Wrong parents of bn4", "", driver.listParents("g1", "bn4"));
+	
+	assertEquals("Wrong parents of wn1", "bn1 bn4", driver.listParents("g1", "wn1"));
+	assertEquals("Wrong parents of wn2", "bn1", driver.listParents("g1", "wn2"));
+	assertEquals("Wrong parents of wn3", "bn3", driver.listParents("g1", "wn3"));
+	assertEquals("Wrong parents of wn4", "bn4", driver.listParents("g1", "wn4"));
+
+	assertEquals("Wrong child of bn1", "wn1", driver.getChildByEdgeLabel("g1", "bn1", "b1 to w1"));
+	assertEquals("Wrong parent of bn3", "wn4", driver.getParentByEdgeLabel("g1", "bn3", "w4 to b3"));
+  }
+  
+  @Test
+  public void nullLables() {
+	  BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
+	
+	  //create a graph
+	  driver.createGraph("g1");
+	  
+	  driver.addBlackNode("g1", null);
+	  driver.addWhiteNode("g1", "wn1");
+	  driver.addBlackNode("g1", "bn1");
+	  
+	  driver.addEdge("g1", null, "wn1", "e1");
+	  driver.addEdge("g1", "wn1", null, null);
+	  
+	  assertEquals("Wrong children of null", "wn1", driver.listChildren("g1", null));
+	  assertEquals("Wrong child of wn1", null, driver.getChildByEdgeLabel("g1", "wn1", null));
+	  
+	  assertEquals("Node should not exist", "", driver.listChildren("g1", "BBB"));
+  }
+  
+  @Test
+  public void removeNodes() {
+	  BipartiteGraph<String> g = new BipartiteGraph<String>();
+	  
+	  assertEquals("Legal node failed to be added", true, g.addNode("bn1", null, true));
+	  assertEquals("Legal node failed to be added", true, g.addNode("wn1", null, false));
+	  
+	  assertEquals("Legal edge failed to be added", true, g.addEdge("bn1", "wn1", "e"));
+	  
+	  assertEquals("Illegal node was deleted", false, g.removeNode("Non existing node"));
+	  assertEquals("Legal node failed to be deleted", true, g.removeNode("bn1"));
+	  assertEquals("Legal node failed to be deleted", true, g.removeNode("wn1"));
+  }
+  
+ 
 }
