@@ -1,5 +1,14 @@
 package homework2;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import com.sun.javafx.UnmodifiableArrayList;
+
+import homework2.BipartiteGraph.Node;
+
 // <L, D> --> <label type, data type>
 public class Simulator<L, D> {
 	
@@ -33,6 +42,15 @@ public class Simulator<L, D> {
 	
 	public Object getNodeData(L label) {
 		return this._graph.getNodeData(label);
+	}
+	
+	public Collection<L> getEdges() {
+		List<L> list = new ArrayList<>();
+		for (L nodeLabel : this._graph.listNodes(true)) {
+			list.addAll(this._graph.findNode(nodeLabel).getParentsEdges().keySet());
+			list.addAll(this._graph.findNode(nodeLabel).getChildrenEdges().keySet());
+		}
+		return Collections.unmodifiableList(list);
 	}
 	
 	public boolean addPipeNode(L nodeLabel, D nodeData) {
