@@ -154,7 +154,7 @@ public class BipartiteGraph<L> {
 		}
 		
 		/**
-		 * @return a map of children nodes in the form of  (edgeLabel --> childNode).
+		 * @return a list of children nodes labels.
 		 */
 		public List<K> getChildrenLabels() {
 			this.checkRep();
@@ -184,7 +184,7 @@ public class BipartiteGraph<L> {
 		}
 		
 		/**
-		 * @return a map of parent nodes in the form of  (edgeLabel --> parentNode).
+		 * @return a list of parent nodes labels.
 		 */
 		public List<K> getParentsLabels() {
 			this.checkRep();
