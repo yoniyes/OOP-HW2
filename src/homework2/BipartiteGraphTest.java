@@ -154,6 +154,8 @@ public class BipartiteGraphTest {
 	driver.addEdge("g1","bn1","wn1","b1 to w1");
 	driver.addEdge("g1","bn1","wn2","b1 to w2");
 	driver.addEdge("g1","wn3","bn2","w3 to b2");
+	driver.addEdge("g1", "bn1", "wn4", "b1 to w1");
+	driver.addEdge("g1", "wn4", "bn1", "b1 to w1");
 	
 	//check that only legal edges were added
 	assertEquals("Wrong black nodes", "bn1 bn2 bn3 bn4", driver.listBlackNodes("g1"));
@@ -213,10 +215,103 @@ public class BipartiteGraphTest {
 	  
 	  assertEquals("Legal edge failed to be added", true, g.addEdge("bn1", "wn1", "e"));
 	  
+	  assertNotEquals("Node should exist", null, g.findNode("bn1"));
+	  assertNotEquals("Node should exist", null, g.findNode("wn1"));
+	  
 	  assertEquals("Illegal node was deleted", false, g.removeNode("Non existing node"));
 	  assertEquals("Legal node failed to be deleted", true, g.removeNode("bn1"));
 	  assertEquals("Legal node failed to be deleted", true, g.removeNode("wn1"));
+	  
+	  assertEquals("Node should exist", null, g.findNode("bn1"));
+	  assertEquals("Node should exist", null, g.findNode("wn1"));
   }
   
- 
+  @Test
+  public void removeEdges() {
+	  BipartiteGraph<String> g = new BipartiteGraph<String>();
+	  
+	  g.removeEdge("a", "b");
+	  
+	  assertEquals("Legal node failed to be added", true, g.addNode("bn1", null, true));
+	  assertEquals("Legal node failed to be added", true, g.addNode("wn1", null, false));
+	  assertEquals("Legal node failed to be added", true, g.addNode("bn2", null, true));
+	  assertEquals("Legal node failed to be added", true, g.addNode("wn2", null, false));
+	  
+	  assertEquals("Legal edge failed to be added", true, g.addEdge("bn1", "wn1", "e1"));
+	  assertEquals("Legal edge failed to be added", true, g.addEdge("wn1", "bn1", "e2"));
+	  assertEquals("Legal edge failed to be added", true, g.addEdge("bn2", "wn1", "e3"));
+	  assertEquals("Legal edge failed to be added", true, g.addEdge("wn2", "bn2", "e4"));
+	  
+	  assertEquals("Wrong child", "wn1", g.getChildByEdgeLabel("bn1", "e1"));
+	  assertEquals("Wrong child", "bn1", g.getChildByEdgeLabel("wn1", "e2"));
+	  assertEquals("Wrong child", "wn1", g.getChildByEdgeLabel("bn2", "e3"));
+	  assertEquals("Wrong child", "bn2", g.getChildByEdgeLabel("wn2", "e4"));
+	  assertEquals("Wrong parent", "bn1", g.getParentByEdgeLabel("wn1", "e1"));
+	  assertEquals("Wrong parent", "wn1", g.getParentByEdgeLabel("bn1", "e2"));
+	  assertEquals("Wrong parent", "bn2", g.getParentByEdgeLabel("wn1", "e3"));
+	  assertEquals("Wrong parent", "wn2", g.getParentByEdgeLabel("bn2", "e4"));
+	  
+	  g.removeEdge("eee", "bn1");
+	  g.removeEdge("bbb", "aaa");
+	  
+	  //check that nothing changed
+	  assertEquals("Wrong child", "wn1", g.getChildByEdgeLabel("bn1", "e1"));
+	  assertEquals("Wrong child", "bn1", g.getChildByEdgeLabel("wn1", "e2"));
+	  assertEquals("Wrong child", "wn1", g.getChildByEdgeLabel("bn2", "e3"));
+	  assertEquals("Wrong child", "bn2", g.getChildByEdgeLabel("wn2", "e4"));
+	  assertEquals("Wrong parent", "bn1", g.getParentByEdgeLabel("wn1", "e1"));
+	  assertEquals("Wrong parent", "wn1", g.getParentByEdgeLabel("bn1", "e2"));
+	  assertEquals("Wrong parent", "bn2", g.getParentByEdgeLabel("wn1", "e3"));
+	  assertEquals("Wrong parent", "wn2", g.getParentByEdgeLabel("bn2", "e4"));
+	  
+	  g.removeEdge("e1", "bn1");
+	  g.removeEdge("e4", "wn2");
+	  
+	  assertEquals("edge not removed", null, g.getChildByEdgeLabel("bn1", "e1"));
+	  assertEquals("Wrong child", "bn1", g.getChildByEdgeLabel("wn1", "e2"));
+	  assertEquals("Wrong child", "wn1", g.getChildByEdgeLabel("bn2", "e3"));
+	  assertEquals("edge not removed", null, g.getChildByEdgeLabel("wn2", "e4"));
+	  assertEquals("edge not removed", null, g.getParentByEdgeLabel("wn1", "e1"));
+	  assertEquals("Wrong parent", "wn1", g.getParentByEdgeLabel("bn1", "e2"));
+	  assertEquals("Wrong parent", "bn2", g.getParentByEdgeLabel("wn1", "e3"));
+	  assertEquals("edge not removed", null, g.getParentByEdgeLabel("bn2", "e4"));
+	  
+	  g.removeEdge("e2", "wn1");
+	  g.removeEdge("e3", "bn2");
+	  
+	  assertEquals("edge not removed", null, g.getChildByEdgeLabel("bn2", "e3"));
+	  assertEquals("edge not removed", null, g.getChildByEdgeLabel("wn1", "e2"));
+	  assertEquals("edge not removed", null, g.getParentByEdgeLabel("wn1", "e3"));
+	  assertEquals("edge not removed", null, g.getParentByEdgeLabel("bn1", "e2"));
+  }
+  
+ @Test
+ public void clearTest() {
+	 BipartiteGraph<String> g = new BipartiteGraph<String>();
+	 assertEquals("Graph should be empty", 0 ,g.listNodes(true).size() + g.listNodes(false).size());
+	 g.clear();
+	 assertEquals("Graph should be empty", 0 ,g.listNodes(true).size() + g.listNodes(false).size());
+	 
+	 assertEquals("Legal node failed to be addedd", true, g.addNode("bn1", null, true));
+	 assertEquals("Legal node failed to be addedd", true, g.addNode("bn2", null, false));
+	 assertEquals("Legal node failed to be addedd", true, g.addNode("wn1", null, true));
+	 assertEquals("Legal node failed to be addedd", true, g.addNode("wn2", null, false));
+	 g.addEdge("bn1", "wn1", "THE EDGE");
+	 
+	 assertEquals("Graph should have 4 nodes", 4 ,g.listNodes(true).size() + g.listNodes(false).size());
+	 g.clear();
+	 assertEquals("Graph should be empty", 0 ,g.listNodes(true).size() + g.listNodes(false).size());
+ }
+ @Test
+ public void getNodeDataTest() {
+	 BipartiteGraph<String> g = new BipartiteGraph<String>();
+	 String data = "MY FRIGGIN DATA";
+	 
+	 g.addNode("bn1", data, true);
+	 g.addNode("wn1", null, false);
+	 
+	 assertEquals("wrong data", data, g.getNodeData("bn1"));
+	 assertEquals("wrong data", null, g.getNodeData("wn1"));
+	 assertEquals("Non existing node should return null", null, g.getNodeData("ANOTHER NODE"));
+ }
 }
