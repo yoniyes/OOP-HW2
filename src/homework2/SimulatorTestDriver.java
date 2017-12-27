@@ -18,7 +18,7 @@ public class SimulatorTestDriver {
 	 * @effects Constructs a new test driver.
 	 */
 	public SimulatorTestDriver() {
-        // TODO: Implement this constructor
+        simulators = new HashMap<>();
 	}
 
 	/**
@@ -28,7 +28,7 @@ public class SimulatorTestDriver {
 	 *          initially empty.
 	 */
 	public void createSimulator(String simName) {
-	    // TODO: Implement this method
+	    simulators.put(simName, new Simulator<String, Transaction>(simName, 0));
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class SimulatorTestDriver {
 	 *          the simulator named simName.
 	 */
 	public void addChannel(String simName, String channelName, double limit) {
-	    // TODO: Implement this method
+	    simulators.get(simName).addPipeNode(channelName, new Channel(channelName, limit));
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class SimulatorTestDriver {
 	 *          it to the simulator named simName.
 	 */
 	public void addParticipant(String simName, String participantName, double fee) {
-        // TODO: Implement this method
+        simulators.get(simName).addFilterNode(participantName, new Participant(participantName, fee));
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class SimulatorTestDriver {
 	 *          is the String edgeLabel.
 	 */
 	public void addEdge(String simName, String parentName, String childName, String edgeLabel) {
-        // TODO: Implement this method
+        simulators.get(simName).addEdge(parentName, childName, edgeLabel);
 	}
 
 	/**
@@ -81,7 +81,10 @@ public class SimulatorTestDriver {
 	 *          simulator named simName.
 	 */
 	public void sendTransaction(String simName, String channelName, Transaction tx) {
-        // TODO: Implement this method
+        Object c = simulators.get(simName).getNodeData(channelName);
+        if (c instanceof Channel){
+        	((Channel)c).pushTransaction(tx);
+        }
     }
 	
 	
@@ -91,7 +94,11 @@ public class SimulatorTestDriver {
 	 *         channel named channelName in the simulator named simName.
 	 */
 	public String listContents(String simName, String channelName) {
-        // TODO: Implement this method
+		Object c = simulators.get(simName).getNodeData(channelName);
+        if (c instanceof Channel){
+        	((Channel)c).pushTransaction(tx);
+        }
+        return null;
 	}
 
 	/**
@@ -99,7 +106,11 @@ public class SimulatorTestDriver {
 	 * @return The sum of all  Transaction values stored in the storage of the participant participantName in the simulator simName
 	 */
 	public double getParticipantBalace(String simName, String participantName) {
-        // TODO: Implement this method
+        Object p = simulators.get(simName).getNodeData(participantName);
+        if (p instanceof Participant){
+        	return (Participant(p)).getBalance();
+        }
+        return 0;
 	}
 	
 	/**
