@@ -389,7 +389,7 @@ public class BipartiteGraph<L> {
 	 */
 	public L getParentByEdgeLabel(L child, L edgeLabel) {
 		this.checkRep();
-		return (this.findNode(child) != null && this.findNode(child).getChildrenEdges().get(edgeLabel) != null ? 
+		return (this.findNode(child) != null && this.findNode(child).getParentsEdges().get(edgeLabel) != null ? 
 				this.findNode(child).getParentsEdges().get(edgeLabel).getLabel() : null);
 	}
 	
