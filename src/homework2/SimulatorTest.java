@@ -11,6 +11,7 @@ public class SimulatorTest {
 		
 		driver.createSimulator("sim");
 		
+		assertEquals("It failed for some reason", arg1 ,arg2);
 		
 	}
 }
