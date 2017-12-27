@@ -2,6 +2,7 @@ package homework2;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -96,7 +97,7 @@ public class SimulatorTestDriver {
 	public String listContents(String simName, String channelName) {
 		Object c = simulators.get(simName).getNodeData(channelName);
         if (c instanceof Channel){
-        	((Channel)c).pushTransaction(tx);
+        	return ((Channel)c).getTransactions();
         }
         return null;
 	}
@@ -108,7 +109,7 @@ public class SimulatorTestDriver {
 	public double getParticipantBalace(String simName, String participantName) {
         Object p = simulators.get(simName).getNodeData(participantName);
         if (p instanceof Participant){
-        	return (Participant(p)).getBalance();
+        	return ((Participant)p).getBalance();
         }
         return 0;
 	}
@@ -119,7 +120,7 @@ public class SimulatorTestDriver {
 	 * @effects runs simulator named simName for a single time slice.
 	 */
 	public void simulate(String simName) {
-        // TODO: Implement this method
+        simulators.get(simName).simulate();
 	}
 
 	/**
@@ -129,7 +130,15 @@ public class SimulatorTestDriver {
 	 * @effects Prints the all edges.
 	 */
 	public void printAllEdges(String simName) {
-        // TODO: Implement this method
+		String str = new String();
+        Iterator<String> it = simulators.get(simName).getEdges().iterator();
+        if (it.hasNext()){
+        	str += it.next();
+        }
+        while(it.hasNext()){
+        	str += " " + it.next();
+        }
+        System.out.println(str);
 	}
 
 }

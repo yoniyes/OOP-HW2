@@ -17,7 +17,7 @@ public class Channel implements Simulatable<String> {
 		this.label = label;
 	}
 	
-	public boolean willOverflow(double value){
+	private boolean willOverflow(double value){
 		return currentTotal + value > limit;
 	}
 	
@@ -33,5 +33,22 @@ public class Channel implements Simulatable<String> {
 			it.remove();
 		}
 	}
+	
+	public boolean pushTransaction(Transaction tx){
+		if (willOverflow(tx.getValue())) return false;
+		buffer.add(tx);
+		return true;
+	}
 
+	public String getTransactions(){
+		String s = new String();
+		Iterator<Transaction> it = buffer.iterator();
+		if(it.hasNext()){
+			s += it.next().getValue();
+		}
+		while(it.hasNext()){
+			s += " " + it.next().getValue();
+		}
+		return s;
+	}
 }
