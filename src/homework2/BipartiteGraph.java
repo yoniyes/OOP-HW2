@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.*;
 
 import com.sun.javafx.UnmodifiableArrayList;
 
@@ -339,40 +340,40 @@ public class BipartiteGraph<L> {
 	/**
 	 * @return an immutable collection of the graph's black or white nodes labels.
 	 */
-	public UnmodifiableArrayList<L> listNodes(boolean isBlack) {
+	public Collection<L> listNodes(boolean isBlack) {
 		this.checkRep();
-		List<Object> list = new ArrayList<>();
+		List<L> list = new ArrayList<>();
 		for (Map.Entry<L, Node<L>> entry : nodes.entrySet()) {
 			if (entry.getValue().isBlack() == isBlack) {
 				list.add(entry.getKey());
 			}
 		}
 		this.checkRep();
-		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
+		return Collections.unmodifiableList(list);
 	}
 	
 	/**
 	 * @return an immutable collection of the parent's children.
 	 */
-	public UnmodifiableArrayList<L> listChildren(L parent) {
+	public Collection<L> listChildren(L parent) {
 		this.checkRep();
 		List<L> list = new ArrayList<>();
 		if (this.findNode(parent) != null) {
 			list = this.findNode(parent).getChildrenLabels();
 		}
-		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
+		return Collections.unmodifiableList(list);
 	}
 	
 	/**
 	 * @return a collection of the child's parents.
 	 */
-	public UnmodifiableArrayList<L> listParents(L child) {
+	public Collection<L> listParents(L child) {
 		this.checkRep();
 		List<L> list = new ArrayList<>();
 		if (this.findNode(child) != null) {
 			list = this.findNode(child).getParentsLabels();
 		}
-		return new UnmodifiableArrayList<L>((L[])(list.toArray()), list.size());
+		return Collections.unmodifiableList(list);
 	}
 	
 	/**
