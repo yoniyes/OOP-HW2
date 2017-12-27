@@ -8,7 +8,7 @@ import java.util.Iterator;
  * A channel is a pipe in a bipartite graph That transfers transactions between participants.
  * The channel has a capacity of transcation's value that it can hold at a specific time.
  * 
- * The class also implements Simulatable so that every simulation round allowes the channel to
+ * The class also implements Simulatable so that every simulation round allows the channel to
  * transfer it's transactions to the following participant (which is a pipe).
  */
 public class Channel implements Simulatable<String> {

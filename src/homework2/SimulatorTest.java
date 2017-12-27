@@ -5,5 +5,12 @@ import org.junit.Test;
 
 public class SimulatorTest {
 
-	
+	@Test
+	public void basicTest(){
+		SimulatorTestDriver driver = new SimulatorTestDriver();
+		
+		driver.createSimulator("sim");
+		
+		
+	}
 }
