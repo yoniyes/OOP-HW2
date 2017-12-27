@@ -45,9 +45,11 @@ public class BipartiteGraph<L> {
 				assert(node.isBlack() != otherEnd.isBlack());
 			}
 			Set<L> childrenEdgeSet = new HashSet<>(node.getChildrenEdges().keySet());
-			assert(node.getChildrenEdges().keySet().size() == childrenEdgeSet.size());
 			Set<L> parentsEdgeSet = new HashSet<>(node.getParentsEdges().keySet());
+			assert(node.getChildrenEdges().keySet().size() == childrenEdgeSet.size());
 			assert(node.getParentsEdges().keySet().size() == parentsEdgeSet.size());
+			childrenEdgeSet.retainAll(parentsEdgeSet);
+			assert(childrenEdgeSet.size() == 0);
 		}
 	}
 	
@@ -211,7 +213,7 @@ public class BipartiteGraph<L> {
 			this.getChildrenLabels().remove(label);
 			for (Map.Entry<K, Node<K>> childEdge : this.getChildrenEdges().entrySet()) {
 				if (childEdge.getValue().getLabel().equals(label)) {
-					this.getChildrenEdges().remove(childEdge);
+					this.getChildrenEdges().remove(childEdge.getKey());
 				}
 			}
 		}
@@ -224,7 +226,7 @@ public class BipartiteGraph<L> {
 			this.getParentsLabels().remove(label);
 			for (Map.Entry<K, Node<K>> parentEdge : this.getParentsEdges().entrySet()) {
 				if (parentEdge.getValue().getLabel().equals(label)) {
-					this.getParentsEdges().remove(parentEdge);
+					this.getParentsEdges().remove(parentEdge.getKey());
 				}
 			}
 		}
