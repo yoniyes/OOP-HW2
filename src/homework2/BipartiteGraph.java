@@ -211,10 +211,15 @@ public class BipartiteGraph<L> {
 		 */
 		public void removeChild(K label) {
 			this.getChildrenLabels().remove(label);
+			K removedEdgeLabel = null;
 			for (Map.Entry<K, Node<K>> childEdge : this.getChildrenEdges().entrySet()) {
 				if (childEdge.getValue().getLabel().equals(label)) {
-					this.getChildrenEdges().remove(childEdge.getKey());
+					removedEdgeLabel = childEdge.getKey();
+//					this.getChildrenEdges().remove(childEdge.getKey());
 				}
+			}
+			if (removedEdgeLabel != null) {
+				this.getChildrenEdges().remove(removedEdgeLabel);
 			}
 		}
 		
@@ -224,10 +229,15 @@ public class BipartiteGraph<L> {
 		 */
 		public void removeParent(K label) {
 			this.getParentsLabels().remove(label);
+			K removedEdgeLabel = null;
 			for (Map.Entry<K, Node<K>> parentEdge : this.getParentsEdges().entrySet()) {
 				if (parentEdge.getValue().getLabel().equals(label)) {
-					this.getParentsEdges().remove(parentEdge.getKey());
+					removedEdgeLabel = parentEdge.getKey();
+//					this.getParentsEdges().remove(parentEdge.getKey());
 				}
+			}
+			if (removedEdgeLabel != null) {
+				this.getParentsEdges().remove(removedEdgeLabel);
 			}
 		}
 	}
