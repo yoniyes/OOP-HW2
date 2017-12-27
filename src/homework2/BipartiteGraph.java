@@ -292,6 +292,7 @@ public class BipartiteGraph<L> {
 		Node<L> _to = this.findNode(to);
 		if(_to == null || _from == null) return false;
 		if (!_from.getChildrenEdges().containsKey(label) && !_to.getParentsEdges().containsKey(label) &&
+				!_from.getParentsEdges().containsKey(label) && !_to.getChildrenEdges().containsKey(label) &&
 				_from.isBlack() != _to.isBlack()) {
 			_from.addChild(label, _to);
 			_to.addParent(label, _from);
