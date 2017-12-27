@@ -28,21 +28,21 @@ public class BipartiteGraph<L> {
 	 */
 	
 	/**
-	 * Rep. Invariant:	nodes != null
-	 * 					for all edges touching node V:
+	 * Rep. Invariant:	for all edges touching node V:
 	 * 						V.color != otherEndOfEdges.color
 	 * 					all edges touching a node are uniquely labeled.
 	 */
 	
 	private void checkRep() {
-		assert(this.nodes != null);
 		for(Node<L> node : nodes.values()) {
+			// Only edges from black to non-black nodes.
 			for(Node<L> otherEnd : node.getChildrenEdges().values()) {
 				assert(node.isBlack() != otherEnd.isBlack());
 			}
 			for(Node<L> otherEnd : node.getParentsEdges().values()) {
 				assert(node.isBlack() != otherEnd.isBlack());
 			}
+			// All edges touching a node are uniquely labeled.
 			Set<L> childrenEdgeSet = new HashSet<>(node.getChildrenEdges().keySet());
 			Set<L> parentsEdgeSet = new HashSet<>(node.getParentsEdges().keySet());
 			assert(node.getChildrenEdges().keySet().size() == childrenEdgeSet.size());
@@ -117,7 +117,7 @@ public class BipartiteGraph<L> {
 		}
 		
 		/**
-		 * @modifies this.
+		 * @modifies this data.
 		 * @effects the data in this is set to 'data'.
 		 */
 		public void setData(Object data) {
@@ -135,7 +135,7 @@ public class BipartiteGraph<L> {
 		}
 		
 		/**
-		 * @modifies this.
+		 * @modifies this label.
 		 * @effects the label of this is set to 'label'.
 		 */
 		public void setLabel(K label) {
@@ -161,8 +161,8 @@ public class BipartiteGraph<L> {
 		}
 		
 		/**
-		 * @requires (child) != null.
-		 * @modifies this.
+		 * @requires child != null.
+		 * @modifies this children labels, children edges.
 		 * @effects an edge is drawn from this to child.
 		 */
 		public void addChild(K edgeLabel, Node<K> child) {
@@ -192,7 +192,7 @@ public class BipartiteGraph<L> {
 		
 		/**
 		 * @requires (edgeLabel, child) != null.
-		 * @modifies this.
+		 * @modifies this parent labels, parent edges.
 		 * @effects an edge is drawn from parent to this.
 		 */
 		public void addParent(K edgeLabel, Node<K> parent) {
@@ -205,7 +205,7 @@ public class BipartiteGraph<L> {
 		}
 		
 		/**
-		 * @modifies this.edges.
+		 * @modifies this edges.
 		 * @effects removes the node child relation from this.
 		 */
 		public void removeChild(K label) {
@@ -214,7 +214,6 @@ public class BipartiteGraph<L> {
 			for (Map.Entry<K, Node<K>> childEdge : this.getChildrenEdges().entrySet()) {
 				if (childEdge.getValue().getLabel().equals(label)) {
 					removedEdgeLabel = childEdge.getKey();
-//					this.getChildrenEdges().remove(childEdge.getKey());
 				}
 			}
 			if (removedEdgeLabel != null) {
@@ -223,7 +222,7 @@ public class BipartiteGraph<L> {
 		}
 		
 		/**
-		 * @modifies this.edges.
+		 * @modifies this edges.
 		 * @effects removes the node parent relation from this.
 		 */
 		public void removeParent(K label) {
@@ -232,7 +231,6 @@ public class BipartiteGraph<L> {
 			for (Map.Entry<K, Node<K>> parentEdge : this.getParentsEdges().entrySet()) {
 				if (parentEdge.getValue().getLabel().equals(label)) {
 					removedEdgeLabel = parentEdge.getKey();
-//					this.getParentsEdges().remove(parentEdge.getKey());
 				}
 			}
 			if (removedEdgeLabel != null) {
@@ -261,7 +259,7 @@ public class BipartiteGraph<L> {
 	
 	/**
 	 * @requires data != null.
-	 * @modifies this.
+	 * @modifies this nodes.
 	 * @effects adds label to the graph's nodes.
 	 * @return a boolean value representing if the label was added.
 	 */
@@ -277,7 +275,7 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @modifies this.
+	 * @modifies this nodes.
 	 * @effects removes label from the graph's nodes.
 	 * @return a boolean value representing if the label was removed.
 	 */
@@ -293,7 +291,7 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @modifies this.
+	 * @modifies this nodes and edges.
 	 * @effects adds label to the graph's edges.
 	 * @return a boolean value representing if the label was added.
 	 */
@@ -315,7 +313,7 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @modifies this.
+	 * @modifies this nodes and edges.
 	 * @effects removes label from the graph's edges.
 	 */
 	public void removeEdge(L label, L from) {
@@ -414,7 +412,7 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
-	 * @modifies this
+	 * @modifies this.
 	 * @effects resets the graph to initial state.
 	 */
 	public void clear() {

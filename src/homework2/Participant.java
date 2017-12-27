@@ -21,17 +21,14 @@ public class Participant implements Simulatable<String> {
 	
 	/**
 	 * Rep. Invariant:	(fee, balance) >= 0
-	 * 					(storageBuffer, workBuffer) != null
 	 */
 	
 	private void checkRep() {
 		assert(fee >= 0);
 		assert(balance >= 0);
-		assert(storageBuffer != null);
-		assert(workBuffer != null);
 	}
 	
-	private double fee;
+	private final double fee;
 	private String label;
 	private List<Transaction> storageBuffer;
 	private List<Transaction> workBuffer;

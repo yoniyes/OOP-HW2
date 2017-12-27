@@ -27,7 +27,7 @@ public class SimulatorTestDriver {
 	 *          initially empty.
 	 */
 	public void createSimulator(String simName) {
-	    simulators.put(simName, new Simulator<String, Transaction>(simName, 0));
+	    simulators.put(simName, new Simulator<String, Transaction>(simName));
 	}
 
 	/**
