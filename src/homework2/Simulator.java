@@ -1,7 +1,7 @@
 package homework2;
 
 // <L, D> --> <label type, data type>
-public class Simulator<L, D> implements Simulatable<L> {
+public class Simulator<L, D> {
 	
 	private L _label;
 	private int _round;
@@ -31,11 +31,11 @@ public class Simulator<L, D> implements Simulatable<L> {
 		this._numOfRounds = numOfRounds;
 	}
 	
-	public boolean addBlackNode(L nodeLabel, D nodeData) {
+	public boolean addPipeNode(L nodeLabel, D nodeData) {
 		return this._graph.addNode(nodeLabel, nodeData, true);
 	}
 	
-	public boolean addWhiteNode(L nodeLabel, D nodeData) {
+	public boolean addFilterNode(L nodeLabel, D nodeData) {
 		return this._graph.addNode(nodeLabel, nodeData, false);
 	}
 	
@@ -52,19 +52,18 @@ public class Simulator<L, D> implements Simulatable<L> {
 	}
 
 //	@SuppressWarnings("unchecked")
-	@Override
-	public void simulate(BipartiteGraph<L> graph) {
-		for (L nodeLabel : graph.listNodes(true)) {
-			Object pipeNode = graph.getNodeData(nodeLabel);
+	public void simulate() {
+		for (L nodeLabel : _graph.listNodes(true)) {
+			Object pipeNode = _graph.getNodeData(nodeLabel);
 			if (pipeNode instanceof Simulatable<?>) {
-				((Simulatable<L>)pipeNode).simulate(graph);
+				((Simulatable<L>)pipeNode).simulate(_graph);
 			}
 			//TODO is that it?
 		}
-		for (L nodeLabel : graph.listNodes(false)) {
-			Object filterNode = graph.getNodeData(nodeLabel);
+		for (L nodeLabel : _graph.listNodes(false)) {
+			Object filterNode = _graph.getNodeData(nodeLabel);
 			if (filterNode instanceof Simulatable<?>) {
-				((Simulatable<L>)filterNode).simulate(graph);
+				((Simulatable<L>)filterNode).simulate(_graph);
 			}
 			//TODO is that it?
 		}
