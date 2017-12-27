@@ -48,7 +48,7 @@ public class Participant implements Simulatable<String> {
 		this.workBuffer.add(tx);
 	}
 	
-	public Transaction takeFee(Transaction tx) {
+	private Transaction takeFee(Transaction tx) {
 		if (tx == null) return null;
 		if (tx.getDest().equals(this.getLabel())) {
 			this.storageBuffer.add(tx);
