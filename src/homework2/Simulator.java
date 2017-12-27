@@ -5,10 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.sun.javafx.UnmodifiableArrayList;
-
-import homework2.BipartiteGraph.Node;
-
 // <L, D> --> <label type, data type>
 public class Simulator<L, D> {
 	
@@ -73,6 +69,7 @@ public class Simulator<L, D> {
 		return this.getRound() >= this.getNumOfRounds();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void simulate() {
 		for (L nodeLabel : _graph.listNodes(true)) {
 			Object pipeNode = _graph.getNodeData(nodeLabel);
