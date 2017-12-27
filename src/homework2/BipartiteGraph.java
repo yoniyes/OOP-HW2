@@ -2,8 +2,10 @@ package homework2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.sun.javafx.UnmodifiableArrayList;
 
@@ -26,12 +28,11 @@ public class BipartiteGraph<L> {
 	 * 							directed edge (A --E--> B).
 	 */
 	
-	//TODO rep. inv.: the thing with the edge labels... check that there's no overlapping.
-	
 	/**
 	 * Rep. Invariant:	nodes != null
 	 * 					for all edges touching node V:
 	 * 						V.color != otherEndOfEdges.color
+	 * 					all edges touching a node are uniquely labeled.
 	 */
 	
 	private void checkRep() {
@@ -43,6 +44,10 @@ public class BipartiteGraph<L> {
 			for(Node<L> otherEnd : node.getParentsEdges().values()) {
 				assert(node.isBlack() != otherEnd.isBlack());
 			}
+			Set<L> childrenEdgeSet = new HashSet<>(node.getChildrenEdges().keySet());
+			assert(node.getChildrenEdges().keySet().size() == childrenEdgeSet.size());
+			Set<L> parentsEdgeSet = new HashSet<>(node.getParentsEdges().keySet());
+			assert(node.getParentsEdges().keySet().size() == parentsEdgeSet.size());
 		}
 	}
 	
