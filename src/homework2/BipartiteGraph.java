@@ -403,6 +403,18 @@ public class BipartiteGraph<L> {
 	}
 	
 	/**
+	 * @modifies a node in this.
+	 * @effects the node with the appropriate label is set to store the data given.
+	 */
+	public void setNodeData(L label, Object data) {
+		this.checkRep();
+		Node<L> node = this.findNode(label);
+		if (node != null) {
+			node.setData(data);
+		}
+	}
+	
+	/**
 	 * @modifies this
 	 * @effects resets the graph to initial state.
 	 */
