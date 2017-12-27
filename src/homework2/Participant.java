@@ -6,6 +6,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+
+/**
+ * 
+ * @author yonatanyeshanov
+ */
 public class Participant implements Simulatable<String> {
 	
 	private double fee;
@@ -78,11 +83,7 @@ public class Participant implements Simulatable<String> {
 		while (it.hasNext()) {
 			Transaction tx = it.next();
 			Transaction pipeOut = this.takeFee(tx);
-			if (pipeOut == null) {
-				it.remove();
-			}
-			else if (channel != null && !channel.willOverflow(pipeOut.getValue())) {
-				channel.pushTransaction(pipeOut);
+			if (pipeOut == null || (channel != null && channel.pushTransaction(pipeOut))) {
 				it.remove();
 			}
 		}
