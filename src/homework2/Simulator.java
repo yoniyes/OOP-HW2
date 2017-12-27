@@ -53,11 +53,11 @@ public class Simulator<L, D> {
 		return Collections.unmodifiableList(list);
 	}
 	
-	public boolean addPipeNode(L nodeLabel, D nodeData) {
+	public boolean addPipeNode(L nodeLabel, Object nodeData) {
 		return this._graph.addNode(nodeLabel, nodeData, true);
 	}
 	
-	public boolean addFilterNode(L nodeLabel, D nodeData) {
+	public boolean addFilterNode(L nodeLabel, Object nodeData) {
 		return this._graph.addNode(nodeLabel, nodeData, false);
 	}
 	
