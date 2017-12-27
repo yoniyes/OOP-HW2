@@ -31,6 +31,10 @@ public class Simulator<L, D> {
 		this._numOfRounds = numOfRounds;
 	}
 	
+	public Object getNodeData(L label) {
+		return this._graph.getNodeData(label);
+	}
+	
 	public boolean addPipeNode(L nodeLabel, D nodeData) {
 		return this._graph.addNode(nodeLabel, nodeData, true);
 	}
@@ -51,21 +55,18 @@ public class Simulator<L, D> {
 		return this.getRound() >= this.getNumOfRounds();
 	}
 
-//	@SuppressWarnings("unchecked")
 	public void simulate() {
 		for (L nodeLabel : _graph.listNodes(true)) {
 			Object pipeNode = _graph.getNodeData(nodeLabel);
 			if (pipeNode instanceof Simulatable<?>) {
 				((Simulatable<L>)pipeNode).simulate(_graph);
 			}
-			//TODO is that it?
 		}
 		for (L nodeLabel : _graph.listNodes(false)) {
 			Object filterNode = _graph.getNodeData(nodeLabel);
 			if (filterNode instanceof Simulatable<?>) {
 				((Simulatable<L>)filterNode).simulate(_graph);
 			}
-			//TODO is that it?
 		}
 		this._round++;
 	}
