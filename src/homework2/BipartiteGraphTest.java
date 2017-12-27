@@ -314,4 +314,25 @@ public class BipartiteGraphTest {
 	 assertEquals("wrong data", null, g.getNodeData("wn1"));
 	 assertEquals("Non existing node should return null", null, g.getNodeData("ANOTHER NODE"));
  }
+ 
+ @Test
+ public void setNodeDataTest() {
+	 BipartiteGraph<String> g = new BipartiteGraph<String>();
+	 
+	 String data = "DATA";
+	 
+	 g.addNode("bn1", data, true);
+	 g.addNode("wn1", null, false);
+	 
+	 assertEquals("wrong data", data, g.getNodeData("bn1"));
+	 assertEquals("wrong data", null, g.getNodeData("wn1"));
+	 
+	 String data1 = "DATA1";
+	 
+	 g.setNodeData("bn1", data1);
+	 g.setNodeData("wn1", data);
+	 
+	 assertEquals("wrong data", data1, g.getNodeData("bn1"));
+	 assertEquals("wrong data", data, g.getNodeData("wn1"));
+ }
 }
