@@ -3,6 +3,9 @@ package homework2;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+/**
+ * SimulatorTest contains JUnit block-box unit tests for Simulator.
+ */
 public class SimulatorTest {
 
 	@Test
