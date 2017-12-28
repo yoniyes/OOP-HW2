@@ -52,6 +52,14 @@ public class Channel implements Simulatable<String> {
 	}
 	
 	/**
+	 * @return the remaining capacity of this.
+	 */
+	public double getRemainingCapacity(){
+		checkRep();
+		return limit - currentTotal;
+	}
+	
+	/**
 	 * @modifies this
 	 * @effects simulates the channel's operation, by transferring all of its transactions
 	 *          to the following participant.

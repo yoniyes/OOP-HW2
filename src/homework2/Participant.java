@@ -105,17 +105,18 @@ public class Participant implements Simulatable<String> {
 	 * @effects takes a fee from transaction and adds it to the storage buffer of this along with balance update.
 	 * @return a new transaction with the remaining value. if no value is left, null is returned.
 	 */
-	private Transaction takeFee(Transaction tx) {
+	private Transaction takeFee(Transaction tx, double currentOutCapacity) {
 		this.checkRep();
 		if (tx == null) return null;
-		if (tx.getDest().equals(this.getLabel())) {
+		double takenFee = (tx.getValue() < this.getFee() ? tx.getValue() : this.getFee());
+		boolean keepAll = (currentOutCapacity <  tx.getValue() - takenFee);
+		if (tx.getDest().equals(this.getLabel()) || keepAll) {
 			this.storageBuffer.add(tx);
 			this.balance += tx.getValue();
 			this.checkRep();
 			return null;
 		}
-		double takenFee = (tx.getValue() < this.getFee() ? tx.getValue() : this.getFee());
-		if (takenFee > 0) {
+		if (takenFee > 0 ) {
 			this.storageBuffer.add(new Transaction(this.getLabel(), takenFee));
 		}
 		this.balance += takenFee;
@@ -143,7 +144,7 @@ public class Participant implements Simulatable<String> {
 		Iterator<Transaction> it = this.workBuffer.iterator();
 		while (it.hasNext()) {
 			Transaction tx = it.next();
-			Transaction pipeOut = this.takeFee(tx);
+			Transaction pipeOut = this.takeFee(tx, (channel != null ? channel.getRemainingCapacity() : 0));
 			if (pipeOut == null || (channel != null && channel.pushTransaction(pipeOut))) {
 				it.remove();
 			}
